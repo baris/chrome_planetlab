@@ -1,0 +1,68 @@
+<html>
+<head>
+<title>Planetlab Monitor Summary Options</title>
+
+<script>
+function save() {
+    var monitor = document.getElementById('monitor');
+    var plc_mon_url = monitor.children[monitor.selectedIndex].value;
+    localStorage['plc_mon_url'] = plc_mon_url;
+
+    var status = document.getElementById("status");
+    status.innerHTML = "Options Saved.";
+    setTimeout(function() {
+      status.innerHTML = "";
+    }, 1000);
+}
+function restore() {
+    var plc_mon_url = localStorage['plc_mon_url'];
+    if (!plc_mon_url) {
+        plc_mon_url = "http://www.planet-lab.eu/monitor";
+    }
+    var monitor = document.getElementById('monitor');
+    for (var i = 0; i < monitor.children.length; i++) {
+        var child = monitor.children[i];
+        if (child.value == plc_mon_url) {
+            child.selected = "true";
+            break;
+        }
+    }
+}
+</script>
+
+<style>
+body {
+  font-size: 1.5em;
+}
+#main {
+  display: block;
+  text-align: center;
+}
+#status {
+   margin: 2em;
+   color: green;
+}
+</style>
+
+</head>
+
+<body onload='restore()'>
+
+<div id="main">
+<br>
+<h3>Planetlab Monitor Summary Options</h3>
+<br>
+Planetlab Monitor:
+<select id="monitor">
+ <option value="http://monitor.planet-lab.org/monitor">Planetlab Central (PLC)</option>
+ <option value="http://www.planet-lab.eu/monitor">Planetlab Europe (PLE)</option>
+</select>
+
+<button onclick="save()">Save</button>
+
+<div id="status"></div>
+</div>
+
+</body>
+</html>
+

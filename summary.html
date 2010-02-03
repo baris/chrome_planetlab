@@ -1,0 +1,56 @@
+
+<script>
+function get_monitor_url() {
+	var plc_mon_url = localStorage['plc_mon_url']
+	if (!plc_mon_url) {
+	   plc_mon_url = "http://www.planet-lab.eu/monitor";
+	   localStorage['plc_mon_url'] = plc_mon_url;
+	}
+	return plc_mon_url;
+}
+
+function get_summary_url() {
+	return get_monitor_url() + "/summary";	
+}
+
+var req = new XMLHttpRequest();
+function show_summary() {
+	var summary_url = get_summary_url();
+	req.open(
+	    "GET",
+	    summary_url,
+	    true);
+	req.onload = show_page;
+	req.onerror = show_error;
+	req.send(null);	
+}
+
+function show_page() {
+	var summary = req.responseText;
+	var monitor_url = get_monitor_url();
+	var css = "<style type='text/css'>td { font-size: 1.1em; } </style>";
+	var monitor_link = "<center><a href='"
+					+ monitor_url
+					+ "' style='font-size: 1.2em;' target='_blank'>"
+					+ monitor_url
+					+ "</a></center><br>";
+
+	// remove html tags and add some.
+	re = new RegExp("</?html>");
+	summary.replace(re, "");
+	summary = css + monitor_link + "<body>" + summary + "</body>";
+
+	show_html(summary);
+}
+
+function show_error() {
+	show_html("Can not reach " + get_summary_url() + " !");
+}
+
+function show_html(text) {
+	var htmls = document.getElementsByTagName("html");
+	htmls[0].innerHTML = text;
+}
+
+show_summary();
+</script>
